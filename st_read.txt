@@ -13,10 +13,10 @@ library(readr)
 shape <- st_read("24区画像.shp")
 
 #csvファイル読込
-himan <- read_csv("肥満度判定.csv")
+population <- read_csv("H29-10-suikei.csv")
 
 #シェープファイルとcsvファイルを区名のATTR2をキーとして結合
-data <- inner_join(shape, himan, by="ATTR2")
+data <- inner_join(shape, population, by="ATTR2")
 
 #macではplotで文字化けするので防止
 par(family = "HiraKakuProN-W3")
@@ -25,7 +25,7 @@ par(family = "HiraKakuProN-W3")
 plot(data)
 
 #項目を選択して可視化
-plot(data %>% select(男やせ割合))
+plot(data %>% select(総数))
 
 #シェープファイル固有の前から5つは可視化しない
 plot(data %>% select(-(1:5)))
