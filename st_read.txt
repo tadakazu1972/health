@@ -1,25 +1,28 @@
 24区可視化　作業方針
+・macでの作業。文字コードutf-8前提。Windowsは未検証。
 ・Rで大阪市オープンデータポータルにある24区のシェープファイルに、csvを組み合わせて可視化する
 ・シェープファイルのATTR2が区名なので、それをキーに、.shpファイルと.csvファイルを結合させる
 ・そのため、事前にcsvファイルは区名の項目名をATTR2にしておくこと。
-・csvファイルは文字コードUTF-8にしておくと吉（macで作業したので。windowsのshift-JISのままでOKかは未検証）
 
 #ライブラリ読込
-library("dplyr")
-library("sf")
+library(dplyr)
+library(sf)
 library(readr)
 
 #24区シェープファイル読込
-d <- st_read("24ku.shp")
+shape <- st_read("24区画像.shp")
 
 #csvファイル読込
-himan <- read_csv("himan.csv")
+himan <- read_csv("肥満度判定.csv")
 
 #シェープファイルとcsvファイルを区名のATTR2をキーとして結合
-d_himan <- inner_join(d, himan, by = "ATTR2")
+data <- inner_join(shape, himan, by="ATTR2")
+
+#macではplotで文字化けするので防止
+par(family = "HiraKakuProN-W3")
 
 #可視化
-plot(d_himan)
+plot(data)
 
 #項目を選択して可視化
-plot(d_himan %>% select(Male.Thin.Per))
+plot(d_himan %>% select(男やせ割合))
