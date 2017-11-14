@@ -25,4 +25,7 @@ par(family = "HiraKakuProN-W3")
 plot(data)
 
 #項目を選択して可視化
-plot(d_himan %>% select(男やせ割合))
+plot(data %>% select(男やせ割合))
+
+#シェープファイル固有の前から5つは可視化しない
+plot(data %>% select(-(1:5)))
