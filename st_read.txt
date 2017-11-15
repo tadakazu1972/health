@@ -8,6 +8,7 @@
 library(dplyr)
 library(sf)
 library(readr)
+library(RcolorBrewer)
 
 #24区シェープファイル読込
 shape <- st_read("24区画像.shp")
@@ -24,8 +25,15 @@ par(family = "HiraKakuProN-W3")
 #可視化
 plot(data)
 
-#項目を選択して可視化
-plot(data %>% select(総数))
-
 #シェープファイル固有の前から5つは可視化しない
 plot(data %>% select(-(1:5)))
+
+#k-means法で離散化してカラーパレット作成
+col_km <- data$総数 %>% classIntervals(.,n=8,style=“means”) %>% findColours(.,pal=brewer.pal(8,”Reds”))
+
+#項目を選択して可視化
+plot(data %>% select(総数), col=col_km)
+
+#凡例
+library(stringr)
+legend(“topleft”, legend=str_sub(gsub(“,”, “~”, names(attr(col_km, “table”))), start=2, end=-2), fill=attr(col_km, “palette”))
