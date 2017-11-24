@@ -37,10 +37,10 @@ plot(data %>% select(総数), col=col_km)
 #項目はカラムの数値で指示可能
 plot(data %>% select(6))
 
-#画像ファイル生成ループ　（ただし、文字化け未解決）
+#pdfファイル生成ループ (plotの直前でpar(family=~を唱えないと文字化けする)
 for (i in 6:8){
-+  par(family="HiraKakuProN-W3")
 +  quartz(type="pdf", file=sprintf("年齢調整死亡率H25_%d", i))
++  par(family="HiraKakuProN-W3")
 +  plot(data3 %>% select(i))
 +  dev.off()
 + }
