@@ -34,6 +34,9 @@ col_km <- data$総数 %>% classIntervals(.,n=8,style=“means”) %>% findColour
 #項目を選択して可視化
 plot(data %>% select(総数), col=col_km)
 
+#項目はカラムの数値で指示可能
+plot(data %>% select(6))
+
 #凡例
 library(stringr)
 legend(“topleft”, legend=str_sub(gsub(“,”, “~”, names(attr(col_km, “table”))), start=2, end=-2), fill=attr(col_km, “palette”))
