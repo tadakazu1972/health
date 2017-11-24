@@ -8,7 +8,7 @@
 library(dplyr)
 library(sf)
 library(readr)
-library(RcolorBrewer)
+library(RColorBrewer)
 
 #24区シェープファイル読込
 shape <- st_read("24区画像.shp")
