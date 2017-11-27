@@ -10,6 +10,9 @@ library(sf)
 library(readr)
 library(RColorBrewer)
 
+#作業ディレクトリ指定
+setwd("~/Desktop/health")
+
 #24区シェープファイル読込
 shape <- st_read("24区画像.shp")
 
