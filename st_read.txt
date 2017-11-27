@@ -38,8 +38,9 @@ plot(data %>% select(総数), col=col_km)
 plot(data %>% select(6))
 
 #pdfファイル生成ループ (plotの直前でpar(family=~を唱えないと文字化けする)
+#ファイル名はMac -> Windowsで文字化けするため英字推奨。拡張子もつけて。
 for (i in 6:8){
-+  quartz(type="pdf", file=sprintf("年齢調整死亡率H25_%d", i))
++  quartz(type="pdf", file=sprintf("sibouritsuH25_%d.pdf", i))
 +  par(family="HiraKakuProN-W3")
 +  plot(data3 %>% select(i))
 +  dev.off()
