@@ -52,3 +52,9 @@ for (i in 6:8){
 #凡例
 library(stringr)
 legend(“topleft”, legend=str_sub(gsub(“,”, “~”, names(attr(col_km, “table”))), start=2, end=-2), fill=attr(col_km, “palette”))
+
+#read.shape
+install.packages("spsurvey")
+library(spsurvey)
+shape <- read.shape("24区画像.shp")
+plot(shape)
