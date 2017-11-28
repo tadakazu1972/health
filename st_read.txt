@@ -28,6 +28,12 @@ par(family = "HiraKakuProN-W3")
 #可視化
 plot(data)
 
+#ラベル名指定で可視化
+plot(data["ATTR2"])
+
+#geometryだけ描画
+plot(st_geometry(data))
+
 #シェープファイル固有の前から5つは可視化しない
 plot(data %>% select(-(1:5)))
 
