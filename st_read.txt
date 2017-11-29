@@ -3,7 +3,7 @@
 ・Rで大阪市オープンデータポータルにある24区のシェープファイルに、csvを組み合わせて可視化する
 ・シェープファイルのATTR2が区名なので、それをキーに、.shpファイルと.csvファイルを結合させる
 ・そのため、事前にcsvファイルは区名の項目名をATTR2にしておくこと。
-（注意！！）このシェープファイルは緯度経度が日本測地系であり、Google Mapで使う世界測地系と違うので注意！ポイントなど重ね合わせ表示できない
+（注意！！）このシェープファイルは緯度経度が平面直角座標系であり、Google Mapで使う世界測地系と違うので注意！ポイントなど重ね合わせ表示できない
 
 #ライブラリ読込
 library(dplyr)
@@ -44,11 +44,6 @@ text(st_coordinates(data %>% st_centroid), labels=data$ATTR2, cex=1)
 #ポイント描画
 points(st_coordinates(osaka %>% st_centroid), lwd=30, col="red")
 
-#csvファイルから緯度経度を読みこんで描画 (注意！緯度経度が世界測地系)
-data <- read.csv("csv/ku_label.csv")
-points(data$x, data$y, lwd=10, col="red")
-text(data$x, data$y, labels=data$ku_name, cex=1)
-
 #k-means法で離散化してカラーパレット作成
 col_km <- data$総数 %>% classIntervals(.,n=8,style=“means”) %>% findColours(.,pal=brewer.pal(8,”Reds”))
 
@@ -71,8 +66,27 @@ for (i in 6:8){
 library(stringr)
 legend(“topleft”, legend=str_sub(gsub(“,”, “~”, names(attr(col_km, “table”))), start=2, end=-2), fill=attr(col_km, “palette”))
 
-#read.shape
+******************************************************************
+世界測地系のシェープファイル描画
+国のサイトから取得した.shpファイルは、大阪府単位であるため、また大阪市のくくりが存在せず
+区が他市町村と同レベルになるため、大阪市24区として抽出するにはshape[1:24]とする。
+また、sfの場合はshape[1:24,1]と複数あるので1や2など単一項目を指定する。
+
+h27_did_27.shp　　大阪府の市町村
+
+#大阪府のシェープファイルから大阪市24区だけ描く
+shape <- st_read("h27_did_27.shp")
+plot(shape[1:24,1], col="gray")
+
+#csvファイルから緯度経度を読みこんで描画
+data <- read.csv("csv/ku_label.csv")
+points(data$x, data$y, lwd=10, col="red")
+par(family="HiraKakuProN-W3")
+text(data$x, data$y, labels=data$ku_name, cex=1)
+
+
+#read.shapeの場合
 install.packages("spsurvey")
 library(spsurvey)
-shape <- read.shape("24区画像.shp")
-plot(shape)
+shape <- read.shape("h27_did_27.shp")
+plot(shape[1:24,])
