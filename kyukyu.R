@@ -35,7 +35,7 @@ points(yodogawa[,24], yodogawa[,23], lwd=1, col="red")
 
 #分析例
 #入電-現着（分数値）が30分以上を青で描画
-ebisu_30 <- ebisu %>% filter(ebisu[,7] >= 10)
+ebisu_30 <- ebisu %>% filter(ebisu[,7] >= 30)
 points(ebisu_30[,24], ebisu_30[,23], pch=16, col="blue")
 
 #その現場は？
