@@ -27,7 +27,7 @@ data <- left_join(kyukyu, address, by="発生場所・番")
 #淀川第１救急隊を抽出
 yodogawa <- data %>% filter(data[,1]=="淀川第１救急隊")
 
-#描画(緯度経度のXYが前後しているので注意。項番25,24の順)
+#描画(緯度経度のXYが前後しているので注意。項番24,23の順)
 shape <- st_read("h27_did_27.shp")
 par(family="HiraKakuProN-W3")
 plot(shape[1:24,3], col="gray", main=yodogawa[1,1]) #タイトルを隊名に
@@ -40,4 +40,19 @@ points(ebisu_30[,24], ebisu_30[,23], pch=16, col="blue")
 
 #その現場は？
 print(ebisu_30[,2])
+
+#全隊描画：現場を赤でプロット、30分以上は青でプロット
+#60隊の名前を読み込み (都島第１は都島に変更)
+tainame <- read_xlsx("tai.xlsx")
+
+for(i in 1:60){
+ tai <- data %>% filter(data[,1]==tainame[i,1])
+ quartz(type="pdf", file=sprintf("kyukyutaiH28_%d.pdf", i))
+ par(family="HiraKakuProN-W3")
+ plot(shape[1:24,3], col="gray", main=tai[i,1])
+ points(tai[,24], tai[,23], lwd=1, col="red")
+ tai_30 <- tai %>% filter(tai[,7] >=30)
+ points(tai_30[,24], tai_30[,23], pch=16, col="blue")
+ dev.off()
+}
 
