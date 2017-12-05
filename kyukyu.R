@@ -63,8 +63,8 @@ genba <- data %>% group_by(data[,2], data[,24], data[,23]) %>% summarize(count=n
 head(arrange(genba, desc(count)), 20) #降順がミソ
 
 #それを地図にプロット 
-genba20 <- as.matrix(genba)        #pointsするにはdata.frameをmatrixに変換する必要あり
+genba20 <- head(arrange(genba, desc(count)), 20) %>% as.matrix #pointsするにはdata.frameをmatrixに変換する必要あり
 shape <- st_read("h27_did_27.shp") #シェープ読み込み
 plot(shape[1:24,4], col="gray")    #白地図を描画
-points(genba20[,2], genba20[,3], lwd=1, col="red")
+points(genba20[,2], genba20[,3], lwd=2, col="red")
 
