@@ -11,8 +11,8 @@ library(RColorBrewer)
 library(openxlsx)
 
 #作業ディレクトリ指定 
-setwd("~/Desktop/救急分析") # Mac
-#setwd("C:/Users/tadakazu/Desktop/救急分析/") # Windows
+setwd("~/Desktop/kyukyu") # Mac
+#setwd("C:/Users/tadakazu/Desktop/kyukyu/") # Windows
 
 #エクセルファイル読み込み
 #救急搬送データと国交省から作成した街区緯度経度（数値は救急に合わせ全角で置換）
@@ -55,4 +55,16 @@ for(i in 1:60){
  points(tai30[,24], tai30[,23], pch=16, col="blue")
  dev.off()
 }
+
+#発生現場を集計 ２番目の項目である現場毎に集計、緯度経度も合わせて持つため引数で指定
+genba <- data %>% group_by(data[,2], data[,24], data[,23]) %>% summarize(count=n())
+
+#発生現場　多い順トップ20
+head(arrange(genba, desc(count)), 20) #降順がミソ
+
+#それを地図にプロット 
+genba20 <- as.matrix(genba)        #pointsするにはdata.frameをmatrixに変換する必要あり
+shape <- st_read("h27_did_27.shp") #シェープ読み込み
+plot(shape[1:24,4], col="gray")    #白地図を描画
+points(genba20[,2], genba20[,3], lwd=1, col="red")
 
