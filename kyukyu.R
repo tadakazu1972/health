@@ -8,7 +8,7 @@ library(dplyr)
 library(sf)
 library(readr)
 library(RColorBrewer)
-library(oplenxlsx)
+library(openxlsx)
 
 #作業ディレクトリ指定 
 setwd("~/Desktop/救急分析") # Mac
@@ -19,7 +19,7 @@ setwd("~/Desktop/救急分析") # Mac
 kyukyu <- read.xlsx("kyukyu.xlsx")
 
 #OsakaCityAddressの一列目は後でマッチさせるため”発生場所・番"に変更・保存
-address <- read.xlsx("OsakaCityAddress.xlsx")
+address <- read.xlsx("OsakaCityAddress2.xlsx")
 
 #左に位置する救急搬送データに住所でマッチさせて緯度経度のカラムを追加
 data <- left_join(kyukyu, address, by="発生場所・番")
@@ -35,11 +35,11 @@ points(yodogawa[,24], yodogawa[,23], lwd=1, col="red")
 
 #分析例
 #入電-現着（分数値）が30分以上を青で描画
-ebisu_30 <- ebisu %>% filter(ebisu[,7] >= 30)
-points(ebisu_30[,24], ebisu_30[,23], pch=16, col="blue")
+yodogawa30 <- yodogawa %>% filter(yodogawa[,7] >= 30)
+points(yodogawa30[,24], yodogawa30[,23], pch=16, col="blue")
 
 #その現場は？
-print(ebisu_30[,2])
+print(yodogawa30[,2])
 
 #全隊描画：現場を赤でプロット、30分以上は青でプロット
 #60隊の名前を読み込み (都島第１は都島に変更)
@@ -51,8 +51,8 @@ for(i in 1:60){
  par(family="HiraKakuProN-W3")
  plot(shape[1:24,3], col="gray", main=tai[i,1])
  points(tai[,24], tai[,23], lwd=1, col="red")
- tai_30 <- tai %>% filter(tai[,7] >=30)
- points(tai_30[,24], tai_30[,23], pch=16, col="blue")
+ tai30 <- tai %>% filter(tai[,7] >=30)
+ points(tai30[,24], tai30[,23], pch=16, col="blue")
  dev.off()
 }
 
