@@ -43,7 +43,7 @@ print(yodogawa30[,2])
 
 #全隊描画：現場を赤でプロット、30分以上は青でプロット
 #60隊の名前を読み込み (都島第１は都島に変更)
-tainame <- read_xlsx("tai.xlsx")
+tainame <- read.xlsx("tai.xlsx")
 
 for(i in 1:60){
  tai <- data %>% filter(data[,1]==tainame[i,1])
@@ -68,3 +68,28 @@ shape <- st_read("h27_did_27.shp") #シェープ読み込み
 plot(shape[1:24,4], col="gray")    #白地図を描画
 points(genba20[,2], genba20[,3], lwd=2, col="red")
 
+#搬送先の緯度経度を追加
+hansousaki <- read.xlsx("hansousaki.xlsx") #事前に１項目目を「搬送先・医療機関（名称）」に変更すべし
+data2 <- left_join(data, hansousaki, by="搬送先・医療機関（名称）")
+
+#北救急隊の現場から搬送先を線で描く
+kita <- data2 %>% filter(kita[,1]=="北救急隊") #北救急隊を抽出
+points(kita[,24],kita[,23], lwd=1, col="red") #プロット
+points(kita[,27],kita[,26], pch=16, col="blue") #搬送先をプロット
+lines(x=c(kita[,24],kita[,27]), y=c(kita[,23],kita[,26]),lty=1, col="green") #線でつなぐ
+
+#全隊の現場(赤)、搬送先(青)でプロット、間を緑の線でつなぐ(欠損多め)
+#先に線を描いて、後で現場と搬送先をプロットしないと見えなくなる
+#隊名読み込み
+tainame <- read.xlsx("tai.xlsx")
+
+for(i in 1:60){
+ tai <- data2 %>% filter(data2[,1]==tainame[i,1])
+ quartz(type="pdf", file=sprintf("kyukyutaiH28_%dB.pdf", i))
+ par(family="HiraKakuProN-W3")
+ plot(shape[1:24,3], col="gray", main=tai[i,1])
+ lines(x=c(tai[,24], tai[,27]), y=c(tai[,23], tai[,26]), lty=1, col="green")
+ points(tai[,24], tai[,23], lwd=1, col="red")
+ points(tai[,27], tai[,26], pch=16, col="blue")
+ dev.off()
+}
