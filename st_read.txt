@@ -41,6 +41,9 @@ plot(data %>% select(-(1:5)))
 #区名を中心部に描画　(st_coorinatesで緯度経度をsf用に変換する必要あり）
 text(st_coordinates(data %>% st_centroid), labels=data$ATTR2, cex=1)
 
+#数値を区名の少し下に描画 (st_coordinatesの配列でY座標を少しマイナスする)
+text(st_coordinates(data %>% st_centroid)[,1], st_coordinates(data %>% st_centroid)[,2]-0.0015, labels=data$JINKO, cex=1)
+
 #ポイント描画
 points(st_coordinates(osaka %>% st_centroid), lwd=30, col="red")
 
