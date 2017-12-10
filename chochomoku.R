@@ -1,5 +1,6 @@
 #区の町丁目可視化
 #総務省e-Statから世界測地系のshpファイル入手
+#e-Stat > 地図で見る統計（統計GIS） > データダウンロード
 
 par(family="HiraKakuProN-W3")
 col_km <- shape$JINKO %>% classIntervals(.,n=8,style=“means”) %>% findColours(.,pal=brewer.pal(8,”Reds”))
