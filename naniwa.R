@@ -20,9 +20,9 @@ par(family="HiraKakuProN-W3")
 
 #地図と人口　描画
 col_km <- shape$JINKO %>% classIntervals(.,n=8,style="kmeans") %>% findColours(.,pal=brewer.pal(8,"Greens"))
-plot(shape[4], col=col_km, main="浪速区　人口")
+plot(shape[,4], col=col_km, main=“板橋区　人口")
 text(st_coordinates(shape %>% st_centroid)[,1], st_coordinates(shape %>% st_centroid)[,2], labels=shape$MOJI, cex=0.5)
-text(st_coordinates(shape %>% st_centroid)[,1], st_coordinates(shape %>% st_centroid)[,2]-0.0007, labels=shape$JINKO, cex=0.7)
+text(st_coordinates(shape %>% st_centroid)[,1], st_coordinates(shape %>% st_centroid)[,2]-0.0008, labels=shape$JINKO, cex=0.5)
 
 #小学校　描画
 points(school$X, school$Y, lwd=7, col="blue")

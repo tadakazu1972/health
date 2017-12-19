@@ -12,7 +12,6 @@ data = data[,2:17]
 
 #描画 ２種類
 par(family="HiraKakuProN-W3")
-biplot(prcomp(data))
 biplot(prcomp(data, scale=TRUE))
 
 #主成分にかかる固有ベクトルがわかる
