@@ -34,3 +34,33 @@ col_km <- data$総数７５歳以上 %>% classIntervals(.,n=8,style="kmeans") %>
 plot(shape[4], col=col_km, main="住吉区　総数75歳以上")
 text(st_coordinates(data %>% st_centroid)[,1], st_coordinates(data %>% st_centroid)[,2]+0.0005, labels=data$MOJI, cex=0.5)
 text(st_coordinates(data %>% st_centroid)[,1], st_coordinates(data %>% st_centroid)[,2]-0.0005, labels=data$総数７５歳以上, cex=0.7)
+
+###################################################
+# H12-H27　４回分の推移を見る
+#ライブラリ
+library(dplyr)
+
+setwd("~/Desktop/sumiyoshi/")
+lf <- list.files(path="~/Desktop/sumiyoshi/5ages", full.names=T)
+data <- lapply(lf, read.csv)
+data_bind <- do.call(rbind, data)
+
+#HOSYOが3のデータだけ抽出(町丁目個別のデータのみ)
+hyosyo <- data_bind %>% filter(data_bind$HYOSYO=="3")
+
+name <- hyosyo[1:102,4]
+
+#全項目
+for(i in 1:102){
+ p <- data_bind %>% filter(data_bind$NAME==name[i])
+ par(new=T)
+ ts.plot(ts(p[,9]), ts(p[,10]), ts(p[,11]), ts(p[,12]), ts(p[,13]), ts(p[,14]), ts(p[,15]), ts(p[,16]), ts(p[,17]), ts(p[,18]), ts(p[,19]), ts(p[,20]), ts(p[,21]), ts(p[,22]), ts(p[,23]), col=c(1:15), xlim=c(1, 4), ylim=c(0, 500))
+}
+
+#シングル項目　ラベル付き
+for(i in 1:102){
+ p <- data_bind %>% filter(data_bind$NAME==name[i])
+ par(new=T, family="HiraKakuProN-W3", xpd=TRUE)
+ ts.plot(ts(p[,9]), col=c(2), xlim=c(1, 4), ylim=c(0, 500))
+ text(4+0.15, p[4,9], labels=name[i], cex=0.5)
+}
