@@ -68,3 +68,17 @@ for(i in 1:102){
  par(xaxt="s")
  axis(side=1, at=1:4, labels=c("平成12年", "平成17年", "平成22年", "平成27年"))
 }
+
+#すべての項目を各項目ごとにファイルに書き出し
+for(j in 9:23){
+  quartz(type="pdf", file=sprintf("sumiyoshi5agesH12_H27_%d.pdf",j-8))
+  for(i in 1:102){
+    p <- data_bind %>% filter(data_bind$NAME==name[i])
+	par(new=TRUE, family="HiraKakuProN-W3", xpd=TRUE, xaxt="n")
+	ts.plot(ts(p[,j]), col=c(j-8), xlim=c(1, 4), ylim=c(0, 500), main=paste("住吉区  ", colnames(data_bind)[j], sep= ""), xlab="国勢調査実施年", ylab="人")
+	text(4+0.15, p[4,j], labels=name[i], cex=0.5)
+	par(xaxt="s")
+	axis(side=1, at=1:4, labels=c("平成12年", "平成17年", "平成22年", "平成27年"))
+ }
+ dev.off()
+}
