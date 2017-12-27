@@ -53,14 +53,18 @@ name <- hyosyo[1:102,4]
 #全項目
 for(i in 1:102){
  p <- data_bind %>% filter(data_bind$NAME==name[i])
- par(new=T)
- ts.plot(ts(p[,9]), ts(p[,10]), ts(p[,11]), ts(p[,12]), ts(p[,13]), ts(p[,14]), ts(p[,15]), ts(p[,16]), ts(p[,17]), ts(p[,18]), ts(p[,19]), ts(p[,20]), ts(p[,21]), ts(p[,22]), ts(p[,23]), col=c(1:15), xlim=c(1, 4), ylim=c(0, 500))
+ par(new=TRUE, family="HiraKakuProN-W3", xpd=TRUE, xaxt="n")
+ ts.plot(ts(p[,9]), ts(p[,10]), ts(p[,11]), ts(p[,12]), ts(p[,13]), ts(p[,14]), ts(p[,15]), ts(p[,16]), ts(p[,17]), ts(p[,18]), ts(p[,19]), ts(p[,20]), ts(p[,21]), ts(p[,22]), ts(p[,23]), col=c(1:15), xlim=c(1, 4), ylim=c(0, 500), main="住吉区　年齢５歳階級別　人口", xlab="国勢調査実施年", ylab="人")
+ par(xaxt="s")
+ axis(side=1, at=1:4, labels=c("平成12年", "平成17年", "平成22年", "平成27年"))
 }
 
 #シングル項目　ラベル付き
 for(i in 1:102){
  p <- data_bind %>% filter(data_bind$NAME==name[i])
- par(new=T, family="HiraKakuProN-W3", xpd=TRUE)
- ts.plot(ts(p[,9]), col=c(2), xlim=c(1, 4), ylim=c(0, 500))
+ par(new=TRUE, family="HiraKakuProN-W3", xpd=TRUE, xaxt="n")
+ ts.plot(ts(p[,9]), col=c(2), xlim=c(1, 4), ylim=c(0, 500), main=paste("住吉区　", colnames(data_bind)[9], sep= ""), xlab="国勢調査実施年", ylab="人")
  text(4+0.15, p[4,9], labels=name[i], cex=0.5)
+ par(xaxt="s")
+ axis(side=1, at=1:4, labels=c("平成12年", "平成17年", "平成22年", "平成27年"))
 }

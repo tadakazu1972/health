@@ -20,9 +20,9 @@ par(family="HiraKakuProN-W3")
 
 #地図と人口　描画
 col_km <- shape$JINKO %>% classIntervals(.,n=8,style="kmeans") %>% findColours(.,pal=brewer.pal(8,"Greens"))
-plot(shape[,4], col=col_km, main=“板橋区　人口")
+plot(shape[4], col=col_km, main="浪速区　人口")
 text(st_coordinates(shape %>% st_centroid)[,1], st_coordinates(shape %>% st_centroid)[,2], labels=shape$MOJI, cex=0.5)
-text(st_coordinates(shape %>% st_centroid)[,1], st_coordinates(shape %>% st_centroid)[,2]-0.0008, labels=shape$JINKO, cex=0.5)
+text(st_coordinates(shape %>% st_centroid)[,1], st_coordinates(shape %>% st_centroid)[,2]-0.0007, labels=shape$JINKO, cex=0.7)
 
 #小学校　描画
 points(school$X, school$Y, lwd=7, col="blue")
@@ -168,4 +168,36 @@ text(school$X, school$Y+0.0007, labels=school$学校名, cex=1)
 #検知器　描画
 points(kenchiki$経度, kenchiki$緯度, pch=16, col="red")
 
+###################################################
+# H12-H27　４回分の推移を見る
+#ライブラリ
+library(dplyr)
 
+setwd("~/Desktop/naniwa_mimamori/")
+lf <- list.files(path="~/Desktop/naniwa_mimamori/5ages", full.names=T)
+data <- lapply(lf, read.csv)
+data_bind <- do.call(rbind, data)
+
+#HOSYOが3のデータだけ抽出(町丁目個別のデータのみ)
+hyosyo <- data_bind %>% filter(data_bind$HYOSYO=="3")
+
+name <- hyosyo[1:124,4]
+
+#全項目
+for(i in 1:124){
+ p <- data_bind %>% filter(data_bind$NAME==name[i])
+ par(new=TRUE, family="HiraKakuProN-W3", xpd=TRUE, xaxt="n")
+ ts.plot(ts(p[,9]), ts(p[,10]), ts(p[,11]), ts(p[,12]), ts(p[,13]), ts(p[,14]), ts(p[,15]), ts(p[,16]), ts(p[,17]), ts(p[,18]), ts(p[,19]), ts(p[,20]), ts(p[,21]), ts(p[,22]), ts(p[,23]), col=c(1:15), xlim=c(1, 4), ylim=c(0, 500), main="浪速区　年齢５歳階級別　人口", xlab="国勢調査実施年", ylab="人")
+ par(xaxt="s")
+ axis(side=1, at=1:4, labels=c("平成12年", "平成17年", "平成22年", "平成27年"))
+}
+
+#シングル項目　ラベル付き
+for(i in 1:124){
+ p <- data_bind %>% filter(data_bind$NAME==name[i])
+ par(new=TRUE, family="HiraKakuProN-W3", xpd=TRUE, xaxt="n")
+ ts.plot(ts(p[,9]), col=c(2), xlim=c(1, 4), ylim=c(0, 500), main=paste("浪速区  ", colnames(data_bind)[9], sep= ""), xlab="国勢調査実施年", ylab="人")
+ text(4+0.15, p[4,9], labels=name[i], cex=0.5)
+ par(xaxt="s")
+ axis(side=1, at=1:4, labels=c("平成12年", "平成17年", "平成22年", "平成27年"))
+}
