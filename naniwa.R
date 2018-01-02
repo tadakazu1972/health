@@ -181,10 +181,10 @@ data_bind <- do.call(rbind, data)
 #HOSYOが3のデータだけ抽出(町丁目個別のデータのみ)
 hyosyo <- data_bind %>% filter(data_bind$HYOSYO=="3")
 
-name <- hyosyo[1:124,4]
+name <- hyosyo[1:62,4]
 
 #全項目
-for(i in 1:124){
+for(i in 1:62){
  p <- data_bind %>% filter(data_bind$NAME==name[i])
  par(new=TRUE, family="HiraKakuProN-W3", xpd=TRUE, xaxt="n")
  ts.plot(ts(p[,9]), ts(p[,10]), ts(p[,11]), ts(p[,12]), ts(p[,13]), ts(p[,14]), ts(p[,15]), ts(p[,16]), ts(p[,17]), ts(p[,18]), ts(p[,19]), ts(p[,20]), ts(p[,21]), ts(p[,22]), ts(p[,23]), col=c(1:15), xlim=c(1, 4), ylim=c(0, 500), main="浪速区　年齢５歳階級別　人口", xlab="国勢調査実施年", ylab="人")
@@ -193,7 +193,7 @@ for(i in 1:124){
 }
 
 #シングル項目　ラベル付き
-for(i in 1:124){
+for(i in 1:62){
  p <- data_bind %>% filter(data_bind$NAME==name[i])
  par(new=TRUE, family="HiraKakuProN-W3", xpd=TRUE, xaxt="n")
  ts.plot(ts(p[,9]), col=c(2), xlim=c(1, 4), ylim=c(0, 500), main=paste("浪速区  ", colnames(data_bind)[9], sep= ""), xlab="国勢調査実施年", ylab="人")
@@ -202,13 +202,41 @@ for(i in 1:124){
  axis(side=1, at=1:4, labels=c("平成12年", "平成17年", "平成22年", "平成27年"))
 }
 
-#すべての項目を各項目ごとにファイルに書き出し
+#総数　各項目ごとにファイルに書き出し
 for(j in 9:23){
   quartz(type="pdf", file=sprintf("naniwa5agesH12_H27_%d.pdf",j-8))
-  for(i in 1:124){
+  for(i in 1:62){
     p <- data_bind %>% filter(data_bind$NAME==name[i])
 	par(new=TRUE, family="HiraKakuProN-W3", xpd=TRUE, xaxt="n")
 	ts.plot(ts(p[,j]), col=c(j-8), xlim=c(1, 4), ylim=c(0, 500), main=paste("浪速区  ", colnames(data_bind)[j], sep= ""), xlab="国勢調査実施年", ylab="人")
+	text(4+0.15, p[4,j], labels=name[i], cex=0.5)
+	par(xaxt="s")
+	axis(side=1, at=1:4, labels=c("平成12年", "平成17年", "平成22年", "平成27年"))
+ }
+ dev.off()
+}
+
+#男のみ　各項目ごとにファイルに書き出し
+for(j in 29:43){
+  quartz(type="pdf", file=sprintf("naniwa5agesMaleH12_H27_%d.pdf",j-28))
+  for(i in 1:62){
+    p <- data_bind %>% filter(data_bind$NAME==name[i])
+	par(new=TRUE, family="HiraKakuProN-W3", xpd=TRUE, xaxt="n")
+	ts.plot(ts(p[,j]), col=c(j-28), xlim=c(1, 4), ylim=c(0, 500), main=paste("浪速区  ", colnames(data_bind)[j], sep= ""), xlab="国勢調査実施年", ylab="人")
+	text(4+0.15, p[4,j], labels=name[i], cex=0.5)
+	par(xaxt="s")
+	axis(side=1, at=1:4, labels=c("平成12年", "平成17年", "平成22年", "平成27年"))
+ }
+ dev.off()
+}
+
+#女のみ　各項目ごとにファイルに書き出し
+for(j in 49:63){
+  quartz(type="pdf", file=sprintf("naniwa5agesFemaleH12_H27_%d.pdf",j-48))
+  for(i in 1:62){
+    p <- data_bind %>% filter(data_bind$NAME==name[i])
+	par(new=TRUE, family="HiraKakuProN-W3", xpd=TRUE, xaxt="n")
+	ts.plot(ts(p[,j]), col=c(j-48), xlim=c(1, 4), ylim=c(0, 500), main=paste("浪速区  ", colnames(data_bind)[j], sep= ""), xlab="国勢調査実施年", ylab="人")
 	text(4+0.15, p[4,j], labels=name[i], cex=0.5)
 	par(xaxt="s")
 	axis(side=1, at=1:4, labels=c("平成12年", "平成17年", "平成22年", "平成27年"))
