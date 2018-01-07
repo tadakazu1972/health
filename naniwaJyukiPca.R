@@ -51,7 +51,7 @@ library(maptools)
 
 #描画
 par(las=1, family="HiraKakuProN-W3")
-plot(x=NULL, type="n", xlab="PC1", ylab="PC2", xlim=c(-25,25), ylim=c(-17,17), xaxs="i", yaxs="i", xaxt="n", yaxt="n", bty="n")
+plot(x=NULL, type="n", xlab="PC1", ylab="PC2", xlim=c(-25,25), ylim=c(-17,17), xaxs="i", yaxs="i", xaxt="n", yaxt="n", bty="n", main="浪速区　住民基本台帳　各年齢別人口　主成分分析　平成29年9月現在")
 axis(side=1, at=seq(-25,25,5), tck=1.0, lty="dotted", lwd=0.5, col="#dddddd", labels=expression(-25,-20,-15,-10,-5,0,5,10,15,20,25))
 axis(side=2, at=seq(-15,15,5), tck=1.0, lty="dotted", lwd=0.5, col="#dddddd", labels=expression(-15,-10,-5,0,5,10,15))
 points(x=pca$x[,1], y=pca$x[,2], pch=16, col="#ff8c00")
