@@ -60,10 +60,10 @@ for(j in 1:14){
 }
 
 
-#単年度で、町丁目ごとにファイルに書き出し
+#単年度で、町丁目ごとにファイルに書き出し -> 主成分分析と照らし合わせる
 #最後の住基H29/9
 for(i in 1:62){
- quartz(type="pdf", file=sprintf("naniwaJyuki2BH2303_H2909_%d%s.pdf",i,name[i]))
+ quartz(type="png", file=sprintf("naniwaJyuki2BH2303_H2909_%d%s.png",i,name[i]))
  p <- total %>% filter(total$町丁目名==name[i])
  par(new=TRUE, family="HiraKakuProN-W3", xpd=TRUE, xaxt="n")
  plot(c(0:100), p[14,8:108], type="l", col=c(i), xlim=c(0, 100), ylim=c(0, 100), main=paste("浪速区　住民基本台帳　各年齢別　人口　", p[14,1], sep=""), xlab="年齢", ylab="人")
