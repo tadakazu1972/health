@@ -47,7 +47,22 @@ for(j in 1:14){
   dev.off()
 }
 
-#GIFアニメにする前提でpngファイルに書き出し -> GIFアニメ作成ソフトで作業
+#町丁目ごとに住基14回分をファイルに書き出し
+for(i in 1:last){
+  quartz(type="pdf", file=sprintf("sumiyoshiJyuki2H2303_H2909_%d%s.pdf", i, name[i]))
+  for(j in 1:14){    
+    p <- total %>% filter(total$町丁目名==name[i])
+	par(new=TRUE, family="HiraKakuProN-W3", xpd=TRUE, xaxt="n")
+	plot(c(0:100), p[j,8:108], type="l", col=c(j), xlim=c(0, 100), ylim=c(0, 100), main="住吉区　住民基本台帳　各年齢別　人口　", xlab="年齢", ylab="人")
+	text(50+0.55, 80, labels=name[i], cex=1.5)
+	par(xaxt="s")
+	axis(side=1, at=0:100, labels=c(0:100))
+  }
+  dev.off()
+}
+
+######################################################
+# GIFアニメ用 pngファイル生成
 #住基14回別に、町丁目ごとに色を変えて全年齢を描画
 for(j in 1:14){
   quartz(type="png", file=sprintf("sumiyoshiJyuki2H2303_H2909_%d.png",j), dpi=144, bg="white")
@@ -64,7 +79,7 @@ for(j in 1:14){
 
 #町丁目ごとに住基14回分をファイルに書き出し
 for(i in 1:last){
-  quartz(type="pdf", file=sprintf("sumiyoshiJyuki2H2303_H2909_%d%s.pdf", i, name[i]))
+  quartz(type="png", file=sprintf("sumiyoshiJyuki2H2303_H2909_%d%s.png", i, name[i]), dpi=144, bg="white")
   for(j in 1:14){    
     p <- total %>% filter(total$町丁目名==name[i])
 	par(new=TRUE, family="HiraKakuProN-W3", xpd=TRUE, xaxt="n")
