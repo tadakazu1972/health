@@ -6,7 +6,7 @@ library(RColorBrewer)
 library(classInt)
 
 #作業ディレクトリ指定
-setwd("~/Desktop/xxxx")
+setwd("~/Documents/xxxx")
 
 #必要なファイル読込
 shape <- st_read("h27kaxxxxx.shp") #地図境界線、人口
@@ -21,7 +21,7 @@ text(st_coordinates(shape %>% st_centroid)[,1], st_coordinates(shape %>% st_cent
 #####################################################
 # csvデータを結合して描画
 #前処理1：１行目を削除して2行目をヘッダーにする(ヘッダー移設する)
-#前処理2：エディタで色付け計算のためにｘや-,NAは0置換
+#前処理2：ｘや-,NAは0置換
 
 data1 <- read_csv("xxxx.csv")
 
@@ -45,25 +45,29 @@ lf <- list.files(path="~/Documents/住吉区/5ages", full.names=T)
 data <- lapply(lf, read.csv)
 data_bind <- do.call(rbind, data)
 
-#HOSYOが3のデータだけ抽出(町丁目個別のデータのみ)
-hyosyo <- data_bind %>% filter(data_bind$HYOSYO=="3")
+#住基から作成した町丁目名のファイルを読み込んで、小計以外のデータを抽出の際にマッチングとして使用する
+#read.csvはそのまま使うとfactor型に勝手に変換するので、あとでマッチングでlevelsが違うとエラーになるため変換を防ぐ
+name0 <- read.csv("NAME.csv", stringsAsFactors=FALSE)
+#項目xに町丁目名が入っているので、それだけ抜き出して格納する
+name <- name0$x
 
-name <- hyosyo[1:102,4]
+#町丁目の数を保存してあとでforループで使用する
+last <- length(name)
 
 #全項目
-for(i in 1:102){
+for(i in 1:last){
  p <- data_bind %>% filter(data_bind$NAME==name[i])
  par(new=TRUE, family="HiraKakuProN-W3", xpd=TRUE, xaxt="n")
- ts.plot(ts(p[,9]), ts(p[,10]), ts(p[,11]), ts(p[,12]), ts(p[,13]), ts(p[,14]), ts(p[,15]), ts(p[,16]), ts(p[,17]), ts(p[,18]), ts(p[,19]), ts(p[,20]), ts(p[,21]), ts(p[,22]), ts(p[,23]), col=c(1:15), xlim=c(1, 4), ylim=c(0, 500), main="住吉区　年齢５歳階級別　人口", xlab="国勢調査実施年", ylab="人")
+ ts.plot(ts(p[,9:23]), col=c(1:15), xlim=c(1, 4), ylim=c(0, 500), main="住吉区　年齢５歳階級別　人口", xlab="国勢調査実施年", ylab="人")
  par(xaxt="s")
  axis(side=1, at=1:4, labels=c("平成12年", "平成17年", "平成22年", "平成27年"))
 }
 
 #シングル項目　ラベル付き
-for(i in 1:102){
+for(i in 1:last){
  p <- data_bind %>% filter(data_bind$NAME==name[i])
  par(new=TRUE, family="HiraKakuProN-W3", xpd=TRUE, xaxt="n")
- ts.plot(ts(p[,9]), col=c(2), xlim=c(1, 4), ylim=c(0, 500), main=paste("住吉区　", colnames(data_bind)[9], sep= ""), xlab="国勢調査実施年", ylab="人")
+ ts.plot(ts(p[,9]), col=c(i), xlim=c(1, 4), ylim=c(0, 500), main=paste("住吉区　", colnames(data_bind)[9], sep= ""), xlab="国勢調査実施年", ylab="人")
  text(4+0.15, p[4,9], labels=name[i], cex=0.5)
  par(xaxt="s")
  axis(side=1, at=1:4, labels=c("平成12年", "平成17年", "平成22年", "平成27年"))
@@ -72,8 +76,8 @@ for(i in 1:102){
 #総数　各項目ごとにファイルに書き出し
 #町丁目ごとに色変更
 for(j in 9:23){
-  quartz(type="pdf", file=sprintf("sumiyoshi5agesH12_H27_%d.pdf",j-8))
-  for(i in 1:102){
+  quartz(type="pdf", file=sprintf("sumiyoshi5agesH12_H27_%s.pdf",colnames(data_bind)[j]))
+  for(i in 1:last){
     p <- data_bind %>% filter(data_bind$NAME==name[i])
 	par(new=TRUE, family="HiraKakuProN-W3", xpd=TRUE, xaxt="n")
 	ts.plot(ts(p[,j]), col=c(i), xlim=c(1, 4), ylim=c(0, 500), main=paste("住吉区  ", colnames(data_bind)[j], sep= ""), xlab="国勢調査実施年", ylab="人")
@@ -86,11 +90,11 @@ for(j in 9:23){
 
 #男のみ　各項目ごとにファイルに書き出し
 for(j in 29:43){
-  quartz(type="pdf", file=sprintf("sumiyoshi5agesMaleH12_H27_%d.pdf",j-28))
-  for(i in 1:102){
+  quartz(type="pdf", file=sprintf("sumiyoshi5agesH12_H27_%s.pdf",colnames(data_bind)[j]))
+  for(i in 1:last){
     p <- data_bind %>% filter(data_bind$NAME==name[i])
 	par(new=TRUE, family="HiraKakuProN-W3", xpd=TRUE, xaxt="n")
-	ts.plot(ts(p[,j]), col=c(j-28), xlim=c(1, 4), ylim=c(0, 500), main=paste("住吉区  ", colnames(data_bind)[j], sep= ""), xlab="国勢調査実施年", ylab="人")
+	ts.plot(ts(p[,j]), col=c(i), xlim=c(1, 4), ylim=c(0, 500), main=paste("住吉区  ", colnames(data_bind)[j], sep= ""), xlab="国勢調査実施年", ylab="人")
 	text(4+0.15, p[4,j], labels=name[i], cex=0.5)
 	par(xaxt="s")
 	axis(side=1, at=1:4, labels=c("平成12年", "平成17年", "平成22年", "平成27年"))
@@ -100,11 +104,11 @@ for(j in 29:43){
 
 #女のみ　各項目ごとにファイルに書き出し
 for(j in 49:63){
-  quartz(type="pdf", file=sprintf("sumiyoshi5agesFemaleH12_H27_%d.pdf",j-48))
-  for(i in 1:102){
+  quartz(type="pdf", file=sprintf("sumiyoshi5agesH12_H27_%s.pdf",colnames(data_bind)[j]))
+  for(i in 1:last){
     p <- data_bind %>% filter(data_bind$NAME==name[i])
 	par(new=TRUE, family="HiraKakuProN-W3", xpd=TRUE, xaxt="n")
-	ts.plot(ts(p[,j]), col=c(j-48), xlim=c(1, 4), ylim=c(0, 500), main=paste("住吉区  ", colnames(data_bind)[j], sep= ""), xlab="国勢調査実施年", ylab="人")
+	ts.plot(ts(p[,j]), col=c(i), xlim=c(1, 4), ylim=c(0, 500), main=paste("住吉区  ", colnames(data_bind)[j], sep= ""), xlab="国勢調査実施年", ylab="人")
 	text(4+0.15, p[4,j], labels=name[i], cex=0.5)
 	par(xaxt="s")
 	axis(side=1, at=1:4, labels=c("平成12年", "平成17年", "平成22年", "平成27年"))
