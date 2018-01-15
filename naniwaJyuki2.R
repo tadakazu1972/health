@@ -16,11 +16,13 @@ data_bind <- do.call(rbind, data)
 #男女別が「総」のデータだけ抽出
 total <- data_bind %>% filter(data_bind$男女別=="総")
 
-name <- total[1:62,2]
+#浪速区は最後の総数をはじめに削除してしまったので-1しない
+last <- length(total$町丁目)/14
+name <- total[1:last,2]
 
 #住基14回分を色を変えて、町丁目ごとに全年齢を描画
 for(j in 1:14){
-  for(i in 1:62){
+  for(i in 1:last){
    p <- total %>% filter(total$町丁目名==name[i])
    par(new=TRUE, family="HiraKakuProN-W3", xpd=TRUE, xaxt="n")
    plot(c(0:100), p[j,8:108], type="l", col=c(j), xlim=c(0, 100), ylim=c(0, 100), main="浪速区　住民基本台帳　各年齢別　人口", xlab="年齢", ylab="人")
@@ -32,19 +34,33 @@ for(j in 1:14){
 #住基14回別に、町丁目ごとに色を変えて全年齢を描画
 #ファイルに書き出し
 for(j in 1:14){
-  quartz(type="pdf", file=sprintf("naniwaJyuki2H2303_H2909_%d.pdf",j))
-  for(i in 1:62){
+  quartz(type="pdf", file=sprintf("naniwaJyuki2H2303_H2909_%d%s.pdf",j))
+  for(i in 1:last){
    p <- total %>% filter(total$町丁目名==name[i])
    par(new=TRUE, family="HiraKakuProN-W3", xpd=TRUE, xaxt="n")
    plot(c(0:100), p[j,8:108], type="l", col=c(i), xlim=c(0, 100), ylim=c(0, 100), main=paste("浪速区　住民基本台帳　各年齢別　人口　", p[j,1], sep=""), xlab="年齢", ylab="人")
-   text(100+0.55, p[j,68], labels=name[i], cex=0.5)
    par(xaxt="s")
    axis(side=1, at=0:100, labels=c(0:100))
   }
   dev.off()
 }
 
-#GIFアニメにする前提でpngファイルに書き出し -> GIFアニメ作成ソフトで作業
+#町丁目ごとに住基14回分をファイルに書き出し
+for(i in 1:last){
+  quartz(type="pdf", file=sprintf("浪速区_住基_町丁目年齢構成H2303_H2909_%d%s.pdf", i, name[i]))
+  for(j in 1:14){    
+    p <- total %>% filter(total$町丁目名==name[i])
+	par(new=TRUE, family="HiraKakuProN-W3", xpd=TRUE, xaxt="n")
+	plot(c(0:100), p[j,8:108], type="l", col=c(j), xlim=c(0, 100), ylim=c(0, 100), main="浪速区　住民基本台帳　各年齢別　人口　", xlab="年齢", ylab="人")
+	text(50+0.55, 80, labels=name[i], cex=1.5)
+	par(xaxt="s")
+	axis(side=1, at=0:100, labels=c(0:100))
+  }
+  dev.off()
+}
+
+######################################################
+# GIFアニメ用 pngファイル生成
 #住基14回別に、町丁目ごとに色を変えて全年齢を描画
 for(j in 1:14){
   quartz(type="png", file=sprintf("naniwaJyuki2H2303_H2909_%d.png",j))

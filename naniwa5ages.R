@@ -8,7 +8,7 @@ library(RColorBrewer)
 library(classInt)
 
 #作業ディレクトリ指定
-setwd("~/Documents/naniwa")
+setwd("~/Documents/浪速区")
 
 #必要なファイル読込
 shape <- st_read("h27ka27111.shp") #地図境界線、人口
