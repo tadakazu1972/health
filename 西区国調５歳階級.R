@@ -43,7 +43,7 @@ library(dplyr)
 setwd("~/Documents/西区/")
 
 #西区はHYOSYO=3のみで大丈夫なので、2000年のファイルから町丁目名を作成
-name0 <- read.csv("国調/国調2000小地域５歳階級_大阪府.csv", stringsAsFactors=FALSE)
+name0 <- read.csv("~/Documents/国勢調査小地域大阪府/国調2000小地域５歳階級_大阪府.csv", stringsAsFactors=FALSE)
 #西区を抽出
 name1 <- name0 %>% filter(name0$CITYNAME=="西区")
 #HYOSYO=3を抽出
